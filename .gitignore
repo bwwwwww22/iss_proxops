@@ -22,7 +22,8 @@ run_montecarlo/
 DP_Product/
 makefile
 *.exe
-S_sie_resource
+S_sie.resource
+trick.zip
 S_source.hh
 *.trk
 log_RelState.csv
@@ -31,3 +32,4 @@ S_job_execution
 S_run_summary
 send_hs
 varserver_log
+_init_log.csv
