@@ -1,0 +1,126 @@
+/************************************************************
+PURPOSE:
+    ( Simulate an ISS-inspired proximity-ops. )
+LIBRARY DEPENDENCIES:
+    ((guidance.cc)
+     (navigation.cc)
+     (control.cc))
+*************************************************************/
+
+#define TRICK_NO_MASTERSLAVE
+#define TRICK_NO_INSTRUMENTATION
+#define TRICK_NO_REALTIMEINJECTOR
+#define TRICK_NO_ZEROCONF
+#include "sim_objects/default_trick_sys.sm"
+#include "jeod_sys.sm"
+
+#define DYNAMICS 1.0        // orbital dynamics interval
+#define LOW_RATE_ENV 60.0   // slow RNP/polar-motion update interval
+#include "default_priority_settings.sm"   // for P_DYN
+#include "time_TAI_UTC_UT1_TT_GMST.sm"
+
+#include "dynamics.sm"
+#include "earth_GGM05C_MET_RNP.sm"
+#include "environment.sm"
+// #include "moon_lp150Q.sm" // no drag, no j2
+// #include "sun_basic.sm"
+##include "models/utils/lvlh_frame/include/lvlh_frame.hh"
+##include "models/dynamics/derived_state/include/lvlh_relative_derived_state.hh"
+##include "models/dynamics/dyn_body/include/force.hh"
+
+// added after trick build
+##include "dynamics/body_action/include/dyn_body_init_trans_state.hh"
+##include "dynamics/body_action/include/dyn_body_init_lvlh_rot_state.hh"
+##include "dynamics/body_action/include/mass_body_init.hh"
+
+##include "guidance.hh"
+##include "navigation.hh"
+##include "control.hh"
+
+// matching models/dynamics/derived_state/verif/SIM_LvlhRelative/S_define:116-143
+class TargetSimObject : public Trick::SimObject {
+public:
+    jeod::DynBody dyn_body;
+    jeod::LvlhFrame lvlh_frame;
+
+    // added after trick build
+    jeod::DynBodyInitTransState trans_init;
+    jeod::DynBodyInitLvlhRotState lvlh_init;
+    jeod::MassBodyInit mass_init;
+
+    TargetSimObject() {
+        // ("initialization") dyn_body.initialize_model();  // failed to compile
+        P_ENV("initialization") dyn_body.initialize_model(dynamics.dyn_manager);
+        P_DYN("initialization") lvlh_frame.initialize(dynamics.dyn_manager);
+        ("initialization") lvlh_frame.update();
+        (1.0, "environment") lvlh_frame.update();
+    }
+};
+TargetSimObject target;
+
+class ChaserSimObject : public Trick::SimObject {
+public:
+    //chaser truth state
+    jeod::DynBody dyn_body;  
+    // chaser-relative-to-target, JEOD-computed
+    // similar to models/dynamics/derived_state/verif/SIM_LvlhRelative/S_define:167
+    jeod::LvlhRelativeDerivedState lvlh_rel_state;
+    // lives on chaser, not gnc object
+    jeod::Force cmd_force_effector;   
+
+    // added after trick build
+    jeod::DynBodyInitTransState trans_init;
+    jeod::DynBodyInitLvlhRotState lvlh_init;
+    jeod::MassBodyInit mass_init;
+
+    ChaserSimObject() {
+        P_ENV("initialization") dyn_body.initialize_model(dynamics.dyn_manager);
+        P_DYN("initialization") lvlh_rel_state.initialize(dyn_body, dynamics.dyn_manager);
+        (1.0, "environment") lvlh_rel_state.update();
+        
+        //(1.0, "scheduled") std::memcpy(chaser.cmd_force_effector.force,cmd_force, sizeof(cmd_force));
+    }
+};
+ChaserSimObject chaser;
+
+// register for collection
+vcollect chaser.dyn_body.collect.collect_effector_forc jeod::CollectForce::create{chaser.cmd_force_effector};
+
+class GncSimObject : public Trick::SimObject {
+public:
+    Navigation navigation;
+    Guidance guidance;
+    Control control;
+    double meas_rel_pos[3];   /* m Measured relative position */
+    double meas_rel_vel[3];   /* m/s Measured relative velocity */
+    double setpoint_pos[3];   /* m Setpoint position */
+    double setpoint_vel[3];   /* m/s Setpoint velocity */
+    double cmd_force[3];      /* N Commanded force */
+
+
+    GncSimObject() {
+    ("initialization") navigation.initialize();
+    ("initialization") control.initialize();
+    // p.s. guidance doesn't need its own initialize() bc its hold points/corridor
+    // params/tolerances are set directly via input.py
+    (1.0, "scheduled") navigation.update(chaser.lvlh_rel_state.rel_state.trans.position, 
+    chaser.lvlh_rel_state.rel_state.trans.velocity, meas_rel_pos, meas_rel_vel);
+    (1.0, "scheduled") guidance.update(exec_get_sim_time(), meas_rel_pos, meas_rel_vel);
+    (1.0, "scheduled") guidance.get_setpoint(setpoint_pos, setpoint_vel);
+    (1.0, "scheduled") control.update(meas_rel_pos, meas_rel_vel, 
+        setpoint_pos, setpoint_vel, cmd_force);
+
+    // moved from ChaserSim to here bc otherwise this copy job would run before
+    // control.update() computes this cycle's cmd_force, copying stale value
+    (1.0, "scheduled") std::memcpy(chaser.cmd_force_effector.force, 
+            cmd_force, sizeof(cmd_force));
+
+    }
+};
+GncSimObject gnc;
+
+// would get the warning: Job earth.rnp.update_axial_rotation of job class "derivative" 
+// is not handled by any scheduler
+//IntegLoop sim_integ_loop (0.1) chaser, target, dynamics;
+// 0.1 = 10 Hz, faster than gnc (1 hz here)
+IntegLoop sim_integ_loop (0.1) chaser, target, earth, dynamics;

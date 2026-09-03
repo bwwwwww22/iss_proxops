@@ -1,0 +1,33 @@
+# Ignore macOS system files
+.DS_Store
+
+# Ignore build outputs or binary folders
+build/
+bin/
+*.o
+*.so
+
+# Ignore temporary/log files
+*.log
+
+# Ignore local environment or configuration files
+.env
+
+CLAUDE.md
+toolchain_checks/
+run_montecarlo/
+.claude/
+
+.trick/
+DP_Product/
+makefile
+*.exe
+S_sie_resource
+S_source.hh
+*.trk
+log_RelState.csv
+log_RelState.header
+S_job_execution
+S_run_summary
+send_hs
+varserver_log
