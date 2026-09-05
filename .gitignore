@@ -26,7 +26,7 @@ S_sie.resource
 trick.zip
 S_source.hh
 *.trk
-log_RelState.csv
+#log_RelState.csv
 log_RelState.header
 S_job_execution
 S_run_summary

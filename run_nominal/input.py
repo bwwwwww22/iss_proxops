@@ -61,6 +61,10 @@ target.dyn_body.set_name("target")
 chaser.dyn_body.integ_frame_name = "Earth.inertial"
 target.dyn_body.integ_frame_name = "Earth.inertial"
 
+# default is false, i.e. jeod treats the body as kinematically fixed
+chaser.dyn_body.translational_dynamics = True
+target.dyn_body.translational_dynamics = True
+
 #--- Chaser initial state ---#
 # matching sims/SIM_Apollo/Modified_data/state/sv_leo_lvlh.py's pattern
 chaser.trans_init.set_subject_body(chaser.dyn_body)
@@ -164,11 +168,11 @@ pos_tol, vel_tol = 5, 0.05  # arbitrary
 gnc.guidance.set_tolerances(pos_tol, vel_tol)
 
 #--- Control configuration ---#
-kp, kd, max_force = 0.01, 0.5, 5 # arbtrary selection
+#kp, kd, max_force = 0.01, 0.5, 5 # arbtrary selection
+kp, kd, max_force = 2, 100, 1200
 gnc.control.set_gains(kp, kd)
 gnc.control.set_max_force(max_force)
 
-#trick.stop(1)
-trick.sim_services.exec_set_terminate_time(1)
+trick.sim_services.exec_set_terminate_time(1200)
 
 exec(compile(open("log_data.py", "rb").read(), "log_data.py", 'exec'))
