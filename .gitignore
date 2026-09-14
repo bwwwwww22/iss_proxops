@@ -15,7 +15,7 @@ bin/
 
 CLAUDE.md
 toolchain_checks/
-run_montecarlo/
+#run_montecarlo/
 .claude/
 
 .trick/
@@ -27,9 +27,9 @@ trick.zip
 S_source.hh
 *.trk
 #log_RelState.csv
-log_RelState.header
-S_job_execution
-S_run_summary
-send_hs
-varserver_log
-_init_log.csv
+#log_RelState.header
+#S_job_execution
+#S_run_summary
+#send_hs
+#varserver_log
+#_init_log.csv

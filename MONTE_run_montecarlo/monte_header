@@ -1,0 +1,19 @@
+trick.mc_set_num_runs(50)
+
+var0 = trick.MonteVarFile("chaser.trans_init.position[0]", "../MONTE_run_montecarlo/monte_runs", 2, "m")
+trick_mc.mc.add_variable(var0)
+
+var1 = trick.MonteVarFile("chaser.trans_init.position[1]", "../MONTE_run_montecarlo/monte_runs", 3, "m")
+trick_mc.mc.add_variable(var1)
+
+var2 = trick.MonteVarFile("chaser.trans_init.position[2]", "../MONTE_run_montecarlo/monte_runs", 4, "m")
+trick_mc.mc.add_variable(var2)
+
+var3 = trick.MonteVarFile("chaser.trans_init.velocity[0]", "../MONTE_run_montecarlo/monte_runs", 5, "m/s")
+trick_mc.mc.add_variable(var3)
+
+var4 = trick.MonteVarFile("chaser.trans_init.velocity[1]", "../MONTE_run_montecarlo/monte_runs", 6, "m/s")
+trick_mc.mc.add_variable(var4)
+
+var5 = trick.MonteVarFile("chaser.trans_init.velocity[2]", "../MONTE_run_montecarlo/monte_runs", 7, "m/s")
+trick_mc.mc.add_variable(var5)

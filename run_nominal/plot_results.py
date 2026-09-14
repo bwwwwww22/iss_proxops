@@ -92,7 +92,6 @@ def plot_state_timeline(df, ax_time="sys.exec.out.time"):
     axes[0].set_yticks(list(STATE_NAMES.keys()))
     axes[0].set_yticklabels(list(STATE_NAMES.values()))
     #axes[0].set_ylabel("guidance state")
-    axes[0].grid(alpha=0.25)
 
     axes[1].step(df[ax_time], df["gnc.guidance.current_leg_"],
                 where="post", color="tab:orange")
@@ -129,7 +128,6 @@ def plot_force_and_saturation(df, ax_time="sys.exec.out.time"):
     for i in range(3):
         axes[i].plot(df[ax_time], df[f"gnc.cmd_force[{i}]"], color="tab:blue")
         axes[i].set_ylabel(f"F_{labels[i]} [N]")
-        axes[i].grid(alpha=0.3)
         # shade where saturated
         sat_mask = df[f"gnc.control.saturated_[{i}]"].astype(bool)
         if sat_mask.any():
@@ -170,7 +168,7 @@ def plot_corridor_margin(df, ax_time="sys.exec.out.time"):
     ax.set_ylabel("corridor margin [deg]\n(positive = inside cone)")
     ax.set_title("Cone corridor margin vs time")
     ax.legend()
-    #fig.savefig("results/corridor_margin.png", dpi=300)
+    fig.savefig("results/corridor_margin.png", dpi=300)
 
 
 def main():

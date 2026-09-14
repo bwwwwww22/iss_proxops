@@ -1,0 +1,17 @@
+# This run can be executed in stand alone (non-Monte Carlo) mode by running
+# the S_main executable with this file specified as the input file.
+
+if (sys.version_info > (3, 0)):
+    exec(open("../run_montecarlo/input.py").read())
+else:
+    execfile("../run_montecarlo/input.py")
+
+trick.mc_set_enabled(0)
+chaser.trans_init.position[0] = trick.attach_units("m", 6778081.55984035)
+chaser.trans_init.position[1] = trick.attach_units("m", -608.473347761863)
+chaser.trans_init.position[2] = trick.attach_units("m", -843.745148551738)
+chaser.trans_init.velocity[0] = trick.attach_units("m/s", -0.665612861676239)
+chaser.trans_init.velocity[1] = trick.attach_units("m/s", 4763.27181431935)
+chaser.trans_init.velocity[2] = trick.attach_units("m/s", 6009.73730600941)
+trick.set_output_dir("../MONTE_run_montecarlo/RUN_00024")
+trick.mc_set_current_run(24)

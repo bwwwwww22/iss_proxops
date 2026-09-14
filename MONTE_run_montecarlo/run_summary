@@ -1,0 +1,14 @@
+
+Monte Carlo complete: 50 runs (50 successful) (0 non-zero exit status) (0 errors) (0 out of range)
+
+Machine work unit breakdown:
+----------------------------------------------------------------------
+                  machine    units  (units %)  cpu_time (s)  cpu/unit (s)
+----------------------------------------------------------------------
+  1.  Beths-MacBook-Air.local      50  (100.00%)         99.58          1.99
+
+Total monte carlo time taken: 102.27
+Actual average time per unit (sum of CPU time / number of runs): 1.99
+Effective average time per unit (total time / number of runs): 2.05
+Speedup (sum of CPU time / total time): 0.97
+Efficency (speedup / num slaves): 97.37%

@@ -1,0 +1,30 @@
+|L   0|2026/09/04,22:13:43.392610|Beths-MacBook-Air.local| |T 0|0.000000| 
+Warning environment/RNP/polar_motion_table_warning at /Users/bethwei/jeod/models/environment/RNP/RNPJ2000/src/polar_motion_j2000.cc line 90:
+Julian date is beyond values in polar motion 
+ tables.The polar motion is being set to
+ the last value of the tables.
+|L   0|2026/09/04,22:13:43.571747|Beths-MacBook-Air.local| |T 0|1200.000000| 
+     REALTIME SHUTDOWN STATS:
+            ACTUAL INIT TIME:        2.653
+         ACTUAL ELAPSED TIME:        2.824
+|L   0|2026/09/04,22:13:45.365747|Beths-MacBook-Air.local| |T 0|1200.000000| 
+SIMULATION TERMINATED IN
+  PROCESS: 0
+  ROUTINE: Executive_loop_single_thread.cpp:98
+  DIAGNOSTIC: Reached termination time
+
+              SIMULATION START TIME:        0.000
+               SIMULATION STOP TIME:     1200.000
+            SIMULATION ELAPSED TIME:     1200.000
+                 USER CPU TIME USED:        2.445
+               SYSTEM CPU TIME USED:        0.178
+              SIMULATION / CPU TIME:      457.530
+       INITIALIZATION USER CPU TIME:        2.279
+     INITIALIZATION SYSTEM CPU TIME:        0.166
+               SIMULATION RAM USAGE:      176.031MB
+      (External program RAM usage not included!)
+  VOLUNTARY CONTEXT SWITCHES (INIT):          151
+INVOLUNTARY CONTEXT SWITCHES (INIT):         2313
+   VOLUNTARY CONTEXT SWITCHES (RUN):            4
+ INVOLUNTARY CONTEXT SWITCHES (RUN):         1315
+
