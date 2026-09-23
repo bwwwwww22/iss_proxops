@@ -2,10 +2,10 @@ This document summarizes the verification and validation results for
 a closed-loop proximity-operations GN&C simulator, built in C++ on NASA's
 Trick simulation framework and the JEOD (JSC Engineering Orbital Dynamics)
 dynamics library. The system under test is a flight software stack (sensor
-+ guidance state machine + PD controller), against JEOD's truth propagation
+, guidance state machine and PD controller), against JEOD's truth propagation
 for a chaser performing a V-bar approach to a target in LEO. 
 
-Validation: 
+### Validation: 
 - A single nominal trajectory is verified against expected behavior (correct     
   state-machine sequencing, and safety-margin)
 - A Monte Carlo dispersion (position & velocity) campaign to assess robustness
