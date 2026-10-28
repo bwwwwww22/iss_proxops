@@ -13,10 +13,8 @@ bin/
 # Ignore local environment or configuration files
 .env
 
-CLAUDE.md
 toolchain_checks/
 #run_montecarlo/
-.claude/
 
 .trick/
 DP_Product/
@@ -33,3 +31,4 @@ S_source.hh
 #send_hs
 #varserver_log
 #_init_log.csv
+*.html
